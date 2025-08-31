@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>2FA Setup</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow">
+                    <div class="card-body p-5">
+                        <h2 class="card-title text-center mb-4">Two-Factor Authentication Setup</h2>
+                        
+                        <div th:if="${param.success}" class="alert alert-success" role="alert">
+                            <span th:text="${param.success}"></span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4>Current Method:</h4>
+                            <div th:if="${emailOtpEnabled}" class="alert alert-info">
+                                <strong>Email OTP</strong> is currently enabled
+                            </div>
+                            <div th:if="${totpEnabled}" class="alert alert-info">
+                                <strong>Authenticator App</strong> is currently enabled
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4>Enable Email OTP:</h4>
+                            <p>Receive a one-time password via email for authentication.</p>
+                            <form th:action="@{/2fa/setup/email}" method="post">
+                                <button type="submit" class="btn btn-outline-primary">Enable Email OTP</button>
+                            </form>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4>Enable Authenticator App:</h4>
+                            <p>Use an authenticator app like Google Authenticator for authentication.</p>
+                            
+                            <div th:if="${qrCodeUrl != null}">
+                                <p>Scan this QR code with your authenticator app:</p>
+                                <div class="text-center mb-3">
+                                    <img th:src="${qrCodeUrl}" alt="QR Code" class="img-fluid">
+                                </div>
+                                <p>Or enter this secret key manually: <code th:text="${secret}"></code></p>
+                            </div>
+                            
+                            <form th:action="@{/2fa/setup/totp}" method="post">
+                                <button type="submit" class="btn btn-outline-primary">Enable Authenticator App</button>
+                            </form>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <a th:href="@{/home}">Back to Home</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
